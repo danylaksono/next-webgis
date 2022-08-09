@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import DeckGL from "@deck.gl/react";
 import { MVTLayer } from "@deck.gl/geo-layers";
 import {MVTLoader} from '@loaders.gl/mvt';
@@ -17,7 +18,7 @@ const NETWORK_DATA =
 const INITIAL_VIEW_STATE = {
   latitude: 56.47287402822253, 
   longitude: -2.982971550038475, 
-  zoom: 10,
+  zoom: 14,
   bearing: 0,
   pitch: 0,
 };
@@ -27,7 +28,8 @@ myHeaders.append("Authorization", "Basic YWRtaW46cUh1YXFOa1U0ZlhzODZV");
 
 const layers = [
   new TileLayer({
-    data: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    //data: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    data: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 
     minZoom: 0,
     maxZoom: 19,
@@ -55,15 +57,14 @@ const layers = [
   new MVTLayer({
     id: "network_dundee",
     data: NETWORK_DATA,
-    getFillColor: [10, 230, 25, 200],
-    getWidth: 1,
-    pickable: true,
-    autoHighlight: true,
+    getLineColor: [250, 25, 55],
+    getLineWidth: 3,
+    
   }),
   new MVTLayer({
     id: "mvt_estdata",
     data: EST_DATA,
-
+    getPointRadius: 5,
     //loaders: [MVTLoader],
     //loadOptions: {
     //  credentials: "same-origin",
@@ -78,14 +79,26 @@ const layers = [
     //  },
     //},
     // Styles
+    pickable: true,
+    autoHighlight: true,
     getFillColor: [200, 0, 80, 180],
     getWidth: 3,
-  }),
-  new MVTLayer({
-    id: "mvt",
-    data: FLOOD_RISK,
   })
 ];
+
+function getTooltip({object}) {
+    return (
+      object && {
+        html: `\
+    <div><b>EST Dataset</b></div>
+    <div>${object.properties.FULL_ADDRE} </div>
+    <div>${object.properties.DATA_ZON_1} </div>
+    <div><b>UPRN</b></div>
+    <div>${object.properties.UPRN}%</div>
+    `
+      }
+    );
+  }
 
 function DeckComponent() {
   return (
@@ -93,7 +106,9 @@ function DeckComponent() {
       initialViewState={INITIAL_VIEW_STATE}
       controller={true}
       layers={layers}
-    ></DeckGL>
+      getTooltip={getTooltip}
+    >
+    </DeckGL>
   );
 }
 
