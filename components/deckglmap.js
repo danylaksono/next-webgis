@@ -10,6 +10,10 @@ const EST_DATA =
 const FLOOD_RISK =
   "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=dev:flood_risk_areas&STYLE=&TILEMATRIX=EPSG:900913:{z}&TILEMATRIXSET=EPSG:900913&FORMAT=application/vnd.mapbox-vector-tile&TILECOL={x}&TILEROW={y}";
 
+const NETWORK_DATA = 
+"https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=dev:network_dundee&STYLE=&TILEMATRIX=EPSG:900913:{z}&TILEMATRIXSET=EPSG:900913&FORMAT=application/vnd.mapbox-vector-tile&TILECOL={x}&TILEROW={y}";
+
+
 const INITIAL_VIEW_STATE = {
   latitude: 56.47287402822253, 
   longitude: -2.982971550038475, 
@@ -41,7 +45,7 @@ const layers = [
     },
   }),
   new MVTLayer({
-    id: "wms",
+    id: "uk_floodrisk",
     data: FLOOD_RISK,
     getFillColor: [100, 200, 255, 180],
     getWidth: 1,
@@ -49,7 +53,15 @@ const layers = [
     autoHighlight: true,
   }),
   new MVTLayer({
-    id: "mvt",
+    id: "network_dundee",
+    data: NETWORK_DATA,
+    getFillColor: [10, 230, 25, 200],
+    getWidth: 1,
+    pickable: true,
+    autoHighlight: true,
+  }),
+  new MVTLayer({
+    id: "mvt_estdata",
     data: EST_DATA,
 
     //loaders: [MVTLoader],
