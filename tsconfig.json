@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/maps/map-function.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/maps/map-function.js", "components/Sidebar/Sidebar.js", "components/Sidebar/Sidebar.js", "components/DashboardLayout/DashboardLayout.js"],
   "exclude": ["node_modules"]
 }

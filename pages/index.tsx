@@ -1,13 +1,14 @@
-import MapComponent from '../components/maps/olmap.js';
-import DeckComponent from '../components/maps/deckglmap.js';
-import MaplibreComponent from '../components/maps/maplibre.js';
+import type { NextPage } from "next";
+import Container from "../components/Container";
+import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 
-function Home(){
+
+const Home: NextPage = () => {
   return (
-    <div>
-      <MaplibreComponent/>
-    </div>
-  )
-}
+    <Container title="Dashboard">
+      <DashboardLayout />
+    </Container>
+  );
+};
 
 export default Home

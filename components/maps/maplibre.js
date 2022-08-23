@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import Head from "next/head";
 import Map, {
   Popup,
@@ -8,16 +8,17 @@ import Map, {
   NavigationControl,
   FullscreenControl,
   ScaleControl,
-  GeolocateControl,
 } from "react-map-gl";
 import maplibregl from "maplibre-gl";
-
 import "maplibre-gl/dist/maplibre-gl.css";
+
+import ControlPanel from '../layout/control-panel';
+
 
 const INITIAL_VIEW_STATE = {
   latitude: 56.47287402822253,
   longitude: -2.982971550038475,
-  zoom: 12,
+  zoom: 14,
   bearing: 0,
   pitch: 0,
 };
@@ -41,6 +42,7 @@ const scottishIndexLayer = {
   source: "scottish_index_of_multiple_deprivation",
   "source-layer": "scottish_index_of_multiple_deprivation",
   type: "fill",
+  "maxzoom": 15,
   paint: {
     "fill-color": [
       "interpolate",
@@ -67,6 +69,7 @@ const estDatasetLayer = {
   source: "est_datasets",
   "source-layer": "est_datasets",
   type: "circle",
+  "minzoom": 16,
   paint: {
     "circle-color": "#5e2901",
     "circle-opacity": 0.9,
@@ -79,9 +82,11 @@ const networkDundeeLayer = {
   source: "network_dundee",
   "source-layer": "network_dundee",
   type: "line",
+  "minzoom": 16,
   paint: {
-    'line-width': 0.6,
-    'line-color': "red"
+    "line-width": 3,
+    "line-color": "red",
+    "line-opacity": 0.9
   },
 };
 
@@ -90,14 +95,17 @@ const offGasPostcodesLayer = {
   source: "off_gas_postcodes",
   "source-layer": "off_gas_postcodes",
   type: "fill",
+  "minzoom": 15,
   paint: {
-    "fill-color": "yellow",
-    "fill-opacity": 0,
-    "fill-outline-color": "gray",
+    'fill-color': ['match', ['string', ['get', 'gas_supply']], 'True', 'green', 'False', 'red', 'gray'],
+    "fill-opacity": 0.7,
+    "fill-outline-color": "black",
   },
 };
 
 function MaplibreComponent() {
+  const mapRef = useRef();
+  const [showPopup, setShowPopup] = useState(true);
   const [hoverInfo, setHoverInfo] = useState(null);
 
   const onHover = useCallback((event) => {
@@ -105,11 +113,11 @@ function MaplibreComponent() {
     setHoverInfo({
       longitude: event.lngLat.lng,
       latitude: event.lngLat.lat,
-      uprn_code: index_md && index_md.properties.UPRN,
+      props: index_md && index_md.properties.UPRN,
     });
   }, []);
 
-  const hoveredIndex = (hoverInfo && hoverInfo.uprn_code) || "";
+  const hoveredIndex = (hoverInfo && hoverInfo.props) || "";
 
   return (
     <div>
@@ -121,17 +129,36 @@ function MaplibreComponent() {
         initialViewState={INITIAL_VIEW_STATE}
         mapLib={maplibregl}
         controller={true}
-        onMouseMove={onHover}
-        interactiveLayerIds={["est_datasets"]}
+        ref={mapRef}
+        onClick={(e) => {
+          const features = mapRef.current.queryRenderedFeatures(
+            e.point,
+            { layers: ["off_gas_postcodes"] }
+          );
+          console.log(features[0].properties);
+          {showPopup && (
+            <Popup longitude={e.lngLat.lng} latitude={e.lngLat.lat}
+              anchor="bottom"
+              onClose={() => setShowPopup(false)}>
+
+              here
+            
+            </Popup>)}
+        }}
+
         style={{ height: "100vh", width: "100%" }}
         mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
       >
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
         <ScaleControl />
-
+        
+        {/* Layers List*/}
         <Source type="vector" scheme="tms" tiles={scottish_index}>
           <Layer {...scottishIndexLayer} />
+        </Source>
+        <Source type="vector" scheme="tms" tiles={off_gas_postcodes}>
+          <Layer {...offGasPostcodesLayer} />
         </Source>
         <Source type="vector" scheme="tms" tiles={est_datasets}>
           <Layer {...estDatasetLayer} />
@@ -140,18 +167,8 @@ function MaplibreComponent() {
           <Layer {...networkDundeeLayer} />
         </Source>
 
-        {hoveredIndex && (
-          <Popup
-            longitude={hoverInfo.longitude}
-            latitude={hoverInfo.latitude}
-            offset={[0, -10]}
-            closeButton={false}
-            className="county-info"
-          >
-            UPRN: {hoveredIndex}
-          </Popup>
-        )}
       </Map>
+
     </div>
   );
 }
