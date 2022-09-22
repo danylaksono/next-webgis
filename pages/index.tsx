@@ -1,14 +1,16 @@
 import type { NextPage } from "next";
-import Container from "../components/Container";
+import { LayerProvider } from "../context";
+import Container from "../components/Container/Container";
 import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
-
 
 const Home: NextPage = () => {
   return (
-    <Container title="Dashboard">
-      <DashboardLayout />
-    </Container>
+    <LayerProvider>
+      <Container title="Dashboard">
+        <DashboardLayout />
+      </Container>
+    </LayerProvider>
   );
 };
 
-export default Home
+export default Home;

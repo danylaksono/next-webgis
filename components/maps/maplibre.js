@@ -12,28 +12,34 @@ import Map, {
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import ControlPanel from '../layout/control-panel';
-
 
 const INITIAL_VIEW_STATE = {
   latitude: 56.47287402822253,
-  longitude: -2.982971550038475,
-  zoom: 14,
+  longitude: -2.970971550038475,
+  zoom: 11,
   bearing: 0,
   pitch: 0,
 };
 
 const scottish_index = [
-  "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:scottish_index_of_multiple_deprivation@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
+  "https://tq9cdmx7si.execute-api.eu-west-2.amazonaws.com/dev/maps/tegolamap/scottish_index_of_multiple_deprivation/{z}/{x}/{y}.pbf"
+  //"https://geo-server.advanced-infrastructure.co.uk/tile/public.scottish_index_of_multiple_deprivation/{z}/{x}/{y}.pbf"
+  //"https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:scottish_index_of_multiple_deprivation@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
 ];
 const est_datasets = [
-  "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:est_datasets@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
+  //"https://tq9cdmx7si.execute-api.eu-west-2.amazonaws.com/dev/maps/tegolamap/est_dataset/{z}/{x}/{y}.pbf"
+  "https://sq5v6jzc51.execute-api.eu-west-2.amazonaws.com/dev/maps/est_dataset/est_dataset/{z}/{x}/{y}.pbf"
+  //"https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:est_datasets@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
 ];
 const network_dundee = [
   "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:network_dundee@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
 ];
 const off_gas_postcodes = [
-  "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:off_gas_postcodes@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
+  "https://tq9cdmx7si.execute-api.eu-west-2.amazonaws.com/dev/maps/tegolamap/off_gas_postcodes/{z}/{x}/{y}.pbf"
+  //  "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:off_gas_postcodes@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
+];
+const hv_lv_lines = [
+  "https://geo-server.advanced-infrastructure.co.uk/geoserver/gwc/service/tms/1.0.0/dev:hv_lv_lines@EPSG:900913@pbf/{z}/{x}/{y}.pbf",
 ];
 
 
@@ -42,8 +48,9 @@ const scottishIndexLayer = {
   source: "scottish_index_of_multiple_deprivation",
   "source-layer": "scottish_index_of_multiple_deprivation",
   type: "fill",
-  "maxzoom": 15,
+  "maxzoom": 16,
   paint: {
+    //"fill-color":"red",
     "fill-color": [
       "interpolate",
       ["linear"],
@@ -73,7 +80,7 @@ const estDatasetLayer = {
   paint: {
     "circle-color": "#5e2901",
     "circle-opacity": 0.9,
-    "circle-radius": 2,
+    "circle-radius": 8,
   },
 };
 
@@ -95,8 +102,9 @@ const offGasPostcodesLayer = {
   source: "off_gas_postcodes",
   "source-layer": "off_gas_postcodes",
   type: "fill",
-  "minzoom": 15,
+  //"minzoom": 15,
   paint: {
+    //'fill-color':'red',
     'fill-color': ['match', ['string', ['get', 'gas_supply']], 'True', 'green', 'False', 'red', 'gray'],
     "fill-opacity": 0.7,
     "fill-outline-color": "black",
@@ -120,7 +128,7 @@ function MaplibreComponent() {
   const hoveredIndex = (hoverInfo && hoverInfo.props) || "";
 
   return (
-    <div>
+    <div className="col-span-3 row-span-2 h-full bg-base-100 shadow-xl">
       <Head>
         <title>Map Dashboard Maplibre</title>
       </Head>
@@ -128,45 +136,29 @@ function MaplibreComponent() {
       <Map
         initialViewState={INITIAL_VIEW_STATE}
         mapLib={maplibregl}
+        hash= {true}
         controller={true}
         ref={mapRef}
-        onClick={(e) => {
-          const features = mapRef.current.queryRenderedFeatures(
-            e.point,
-            { layers: ["off_gas_postcodes"] }
-          );
-          console.log(features[0].properties);
-          {showPopup && (
-            <Popup longitude={e.lngLat.lng} latitude={e.lngLat.lat}
-              anchor="bottom"
-              onClose={() => setShowPopup(false)}>
-
-              here
-            
-            </Popup>)}
-        }}
-
-        style={{ height: "100vh", width: "100%" }}
+        // style={{ height: "100%", width: "100%" }}
         mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
       >
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
         <ScaleControl />
         
-        {/* Layers List*/}
-        <Source type="vector" scheme="tms" tiles={scottish_index}>
+ 
+        <Source type="vector" scheme="xyz" tiles={scottish_index}>
           <Layer {...scottishIndexLayer} />
         </Source>
-        <Source type="vector" scheme="tms" tiles={off_gas_postcodes}>
-          <Layer {...offGasPostcodesLayer} />
-        </Source>
+        {/* Layers List
         <Source type="vector" scheme="tms" tiles={est_datasets}>
           <Layer {...estDatasetLayer} />
         </Source>
-        <Source type="vector" scheme="tms" tiles={network_dundee}>
-          <Layer {...networkDundeeLayer} />
-        </Source>
 
+        <Source type="vector" scheme="xyz" tiles={off_gas_postcodes}>
+          <Layer {...offGasPostcodesLayer} />
+        </Source>
+                */}
       </Map>
 
     </div>

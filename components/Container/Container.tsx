@@ -5,15 +5,18 @@ type ContainerProps = {
   children: React.ReactNode;
 };
 
-export default function Container({ title, children }: ContainerProps) {
+export function Container({ title, children }: ContainerProps) {
   return (
-    <>
+    <div className="h-screen w-screen">
       <Head>
         <title>{title}</title>
         <meta name="description" content="Next WebGIS" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {children}
-    </>
+    </div>
   );
 }
+
+
+export default Container;

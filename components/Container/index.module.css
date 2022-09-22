@@ -1,0 +1,3 @@
+.dashboardContainer {
+    @apply container p-8 bg-amber-300 h-screen w-screen 
+}

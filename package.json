@@ -8,16 +8,20 @@
   "dependencies": {
     "d3-array": "^3.2.0",
     "d3-scale": "^4.0.2",
-    "daisyui": "^2.24.0",
     "deck.gl": "^8.8.6",
+    "flowbite": "^1.5.3",
+    "flowbite-react": "^0.1.11",
+    "mapbox-gl": "npm:empty-npm-package@1.0.0",
     "maplibre-gl": "^2.3.0",
     "maplibre-gl-opacity": "^1.4.0",
     "next": "latest",
     "ol": "^6.15.1",
-    "mapbox-gl": "npm:empty-npm-package@1.0.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-map-gl": "^7.0.19"
+    "react-icons": "^4.4.0",
+    "react-map-gl": "^7.0.19",
+    "tailwind-styled-components": "^2.2.0",
+    "tailwindcss-classnames": "^3.0.6"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
