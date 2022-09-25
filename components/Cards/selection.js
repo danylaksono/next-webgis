@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { LayerContext } from "../../context";
-import { MdDragHandle, MdFormatPaint } from "react-icons/md";
+import Draggable from 'react-draggable';
+import { MdDragHandle, MdFormatPaint, MdPlaylistAdd } from "react-icons/md";
 
 function SelectionComponent() {
   const { state, dispatch } = useContext(LayerContext);
@@ -33,7 +34,14 @@ function SelectionComponent() {
 
   return (
     <div className="w-64 bg-purple-100 shadow-xl">
-      <p className="px-2"> List of Layers </p>
+      <div className="flex flex-row justify-between items-center px-4 mt-2 mb-2 py-2">
+        <h1 className="font-semibold text-xl">List of Layers</h1>
+        <div className="flex-none w-4 h-4">
+          <div className="rounded-full bg-black-400 hover:bg-blue-200 w-8 h-8 flex items-center justify-center cursor-pointer"> 
+            <MdPlaylistAdd className="w-6 h-6"/>
+          </div>
+        </div>
+      </div>
       <div className="flex flex-col overflow-y-auto p-2">
         {/* {layers.map((layer) => (
             <div key={layer.id}>
@@ -52,7 +60,12 @@ function SelectionComponent() {
             </div>
           ))} */}
         {layers.map((layer) => (
-          <div key={layer.id} className="block border-b pt-1">
+          // <Draggable
+          //   axis="y"
+          //   handle=".handle"
+          //   grid={[25, 53]}
+          // >
+          <div key={layer.id} className="block border-b px-1">
             <div className="border-l-2 border-transparent hover:bg-blue-200 space-y-2">
               <div className="flex flex-row items-center space-x-2">
                 <div className="bg-red-250">
@@ -68,7 +81,7 @@ function SelectionComponent() {
                 <div className="cursor-pointer">
                   <MdFormatPaint />
                 </div>
-                <div className="cursor-grab focus:cursor-grabbing">
+                <div className="handle cursor-grab focus:cursor-grabbing">
                   <MdDragHandle />
                 </div>
               </div>
@@ -86,6 +99,7 @@ function SelectionComponent() {
               </div>
             </div>
           </div>
+          // </Draggable>
         ))}
       </div>
     </div>

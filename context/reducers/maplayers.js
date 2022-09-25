@@ -15,11 +15,6 @@ export function maplayers(state, action) {
     case "TOGGLE_OPACITY":
       // payload: layers' name
       // find object based on payload and change opacity
-      // const opacityState = state.layers.map((obj) =>
-      // obj.name === action.payload.name
-      //   ? { ...obj, opacity: action.payload. }
-      //   : { ...obj, visible: obj.visible }
-      // );
       let objIndex = state.layers.findIndex((obj => obj.name === action.payload.name));
       state.layers[objIndex].opacity = action.payload.opacity;
       return { ...state };

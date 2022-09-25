@@ -4,6 +4,7 @@ import SelectionComponent from "../Cards/selection";
 import ButtonsComponent from "../Cards/button";
 import DummyMapComponent from "../Cards/dummymap";
 import FooterComponent from "../Cards/footer";
+import SidebarComponent from "../Sidebar/sidebar";
 
 export function DashboardLayout() {
   const [selectedLayers, setSelectedLayers] = useState([])
@@ -18,20 +19,8 @@ export function DashboardLayout() {
         <div className="flex-auto resize-y"/>
       </div>
       <SelectionComponent />
-      <div className="w-12 flex flex-col justify-between items-center flex-none bg-red-200 px-4">
-        <div className="flex flex-col space-y-4 w-full items-center pt-5">
-        <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-        <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-        <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-        <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-
-        </div>
-        <div className="flex flex-col space-y-4 pb-5">
-          <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-          <a><div className="rounded-full bg-gray-400 w-8 h-8"></div></a>
-        </div>
-      </div>
-    </div>
+      <SidebarComponent />
+    </div> 
     </>
   );
 }
