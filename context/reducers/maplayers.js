@@ -1,4 +1,4 @@
-export function maplayers(state, action) {
+export function maplayersReducer(state, action) {
   switch (action.type) {
     case "STORE_LAYERS":
       // payload: whole layer array
@@ -7,7 +7,7 @@ export function maplayers(state, action) {
       // payload: layers' name
       // find object based on payload and change visibility
       const visibilityState = state.layers.map((obj) =>
-        obj.name === action.payload
+        obj.id === action.payload
           ? { ...obj, visible: !obj.visible }
           : { ...obj, visible: obj.visible }
       );
@@ -15,7 +15,7 @@ export function maplayers(state, action) {
     case "TOGGLE_OPACITY":
       // payload: layers' name
       // find object based on payload and change opacity
-      let objIndex = state.layers.findIndex((obj => obj.name === action.payload.name));
+      let objIndex = state.layers.findIndex((obj => obj.id === action.payload.id));
       state.layers[objIndex].opacity = action.payload.opacity;
       return { ...state };
     case "ADD_LAYER":

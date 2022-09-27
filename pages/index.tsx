@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <LayerProvider>
       <Container title="Dashboard">
-        <DashboardLayout />
+          <DashboardLayout />
       </Container>
     </LayerProvider>
   );

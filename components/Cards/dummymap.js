@@ -14,7 +14,7 @@ function DummyMapComponent() {
     <div className="h-3/4 flex-shrink bg-slate-200">
         {layers.map((layer) => (
           <div key={layer.id} className="label">
-            <span className="label-text">{layer.name} is {JSON.stringify(layer.visible)} and {layer.opacity}%</span>   
+            <span className="label-text">{layer.title} is {JSON.stringify(layer.visible)} and {layer.opacity}%</span>   
           </div>
         ))}
         

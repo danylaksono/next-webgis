@@ -7,8 +7,6 @@ function SelectionComponent() {
   const { state, dispatch } = useContext(LayerContext);
   let layers = state.layers;
 
-
-
   function handleLayerSwitch(event) {
     dispatch({
       type: "TOGGLE_VISIBILITY",
@@ -16,7 +14,7 @@ function SelectionComponent() {
     });
   }
 
-  const handleOpacity = (event, layername) => {
+  const handleOpacity = (event, layerid) => {
     // let payload = {
     //   name: layername,
     //   opacity: event.target.value
@@ -26,7 +24,7 @@ function SelectionComponent() {
     dispatch({
       type: "TOGGLE_OPACITY",
       payload: {
-        name: layername,
+        id: layerid,
         opacity: event.target.value
       },
     });
@@ -71,13 +69,13 @@ function SelectionComponent() {
                 <div className="bg-red-250">
                   <input
                     type="checkbox"
-                    value={layer.name}
+                    value={layer.id}
                     onChange={handleLayerSwitch}
                     checked={layer.visible}
                     className="checkbox checkbox-primary"
                   />
                 </div>
-                <div className="flex-grow text-sm truncate">{layer.name}</div>
+                <div className="flex-grow text-sm truncate">{layer.title}</div>
                 <div className="cursor-pointer">
                   <MdFormatPaint />
                 </div>
@@ -92,7 +90,7 @@ function SelectionComponent() {
                   min="0"
                   max="100"
                   value={layer.opacity}
-                  onChange={(e) => handleOpacity(e, layer.name)}
+                  onChange={(e) => handleOpacity(e, layer.id)}
                   className="w-full cursor-pointer"
                 />
                 <span className="text-xs"> {layer.opacity}%</span>
