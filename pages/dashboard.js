@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useContext, useRef, useCallback } from "react";
 import Head from "next/head";
-// import { LayerContext, DataContext } from "../../context";
+import { LayerContext, DataContext } from "../context";
 import Map, {
   Popup,
   Source,
@@ -14,7 +14,6 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 
-
 const INITIAL_VIEW_STATE = {
   latitude: 56.47287402822253,
   longitude: -2.970971550038475,
@@ -25,7 +24,25 @@ const INITIAL_VIEW_STATE = {
 
 function MaplibreComponent() {
   const mapRef = useRef();
+  const { state, dispatch } = useContext(LayerContext);
 
+  let layers = state.layers;
+  
+  const map_layers = layers.map(layer => ({
+    id: layer.id,
+    source: layer.id,
+    "source-layer":layer.id,
+    type: layer.styleType,
+    layout: {
+      "visibility": layer.visible ? "visible":"none",
+    },
+    paint: {
+      [`${layer.styleType}-color`]:"red",
+      [`${layer.styleType}-opacity`]:(layer.opacity/100),
+    }
+  })
+  );
+  
   const onHoverLeave = useCallback(event => {
     const map = event.target;
     map.getCanvas().style.cursor = '';
@@ -50,7 +67,11 @@ function MaplibreComponent() {
         <FullscreenControl position="top-right" />
         <NavigationControl position="top-right" />
         <ScaleControl />
-        
+        {layers.map((lyr) => (
+          <Source key={lyr.id} type={lyr.type} scheme="xyz" tiles={[lyr.url]}>
+            <Layer {...(map_layers.find((obj => obj.id === lyr.id)))} />
+          </Source>
+        ))}
 
         {/* <Source  type="vector" scheme="xyz" tiles={urll}>
           <Layer {...hvlvline} />
